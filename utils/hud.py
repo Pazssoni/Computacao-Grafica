@@ -107,6 +107,11 @@ def draw_text_2d(x, y, text, r=1, g=1, b=1):
     draw_text_blocks(x, y, text, scale=2, r=r, g=g, b=b)
 
 
+def text_width(text, scale=2):
+    """Largura aproximada em pixels (para centralizar texto)."""
+    return len(text) * 6 * scale
+
+
 def draw_text_block(w, h, lines, line_height=18):
     glMatrixMode(GL_PROJECTION)
     glPushMatrix()

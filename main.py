@@ -11,21 +11,23 @@ from OpenGL.GL import (
     glDisable, glEnable,
     glBegin, glEnd, glVertex2f, glColor3f,
 )
-from utils.hud import draw_text_2d
+from utils.hud import draw_text_2d, text_width
 from utils.panel import hit_test
 
 MENU_BUTTONS = [
-    ("1", "1 - Transformações Geométricas"),
-    ("2", "2 - Projeção"),
+    ("1", "1 - Transformacoes Geometricas"),
+    ("2", "2 - Projecao"),
     ("3", "3 - ViewPort"),
-    ("4", "4 - Iluminação"),
+    ("4", "4 - Iluminacao"),
     ("5", "5 - Sair"),
 ]
-BTN_WIDTH = 420
-BTN_HEIGHT = 44
-BTN_MARGIN = 12
-MENU_W = 480
-MENU_H = 320
+BTN_WIDTH = 460
+BTN_HEIGHT = 52
+BTN_MARGIN = 18
+MENU_W = 560
+MENU_H = 400
+TOP_PAD = 80
+BOTTOM_PAD = 28
 
 
 def _draw_quad(x1, y1, x2, y2):
@@ -40,9 +42,9 @@ def _draw_quad(x1, y1, x2, y2):
 def _menu_rects(w, h):
     cx = (w - BTN_WIDTH) / 2
     rects = []
-    y = h - 50
+    y = h - TOP_PAD
     for bid, _ in MENU_BUTTONS:
-        if y < 30:
+        if y < BOTTOM_PAD + BTN_HEIGHT:
             break
         rects.append((bid, cx, y - BTN_HEIGHT, cx + BTN_WIDTH, y))
         y -= BTN_HEIGHT + BTN_MARGIN
@@ -61,13 +63,13 @@ def _draw_menu(menu_win):
     glDisable(GL_DEPTH_TEST)
     cx = (w - BTN_WIDTH) / 2
     rects = []
-    y = h - 50
+    y = h - TOP_PAD
     for bid, label in MENU_BUTTONS:
-        if y < 30:
+        if y < BOTTOM_PAD + BTN_HEIGHT:
             break
-        glColor3f(0.18, 0.2, 0.26)
+        glColor3f(0.2, 0.22, 0.28)
         _draw_quad(cx, y - BTN_HEIGHT, cx + BTN_WIDTH, y)
-        glColor3f(0.35, 0.38, 0.45)
+        glColor3f(0.4, 0.43, 0.5)
         glBegin(GL_LINES)
         glVertex2f(cx, y)
         glVertex2f(cx + BTN_WIDTH, y)
@@ -78,10 +80,12 @@ def _draw_menu(menu_win):
         glVertex2f(cx, y - BTN_HEIGHT)
         glVertex2f(cx, y)
         glEnd()
-        draw_text_2d(cx + 20, y - 28, label, 0.92, 0.94, 1.0)
+        draw_text_2d(cx + 24, y - (BTN_HEIGHT / 2) - 6, label, 0.94, 0.96, 1.0)
         rects.append((bid, cx, y - BTN_HEIGHT, cx + BTN_WIDTH, y))
         y -= BTN_HEIGHT + BTN_MARGIN
-    draw_text_2d(cx, h - 22, "Computação Gráfica - Escolha o módulo", 0.85, 0.88, 0.95)
+    title = "ANAMARANATOR 2000 - Escolha o modulo"
+    tw = text_width(title, 2)
+    draw_text_2d((w - tw) / 2, h - 28, title, 0.88, 0.9, 0.98)
     glEnable(GL_DEPTH_TEST)
     return rects
 
@@ -92,7 +96,7 @@ def main():
         sys.exit(1)
     glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 2)
     glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
-    menu_win = glfw.create_window(MENU_W, MENU_H, "Computação Gráfica - Menu", None, None)
+    menu_win = glfw.create_window(MENU_W, MENU_H, "ANAMARANATOR 2000 - Menu", None, None)
     if not menu_win:
         glfw.terminate()
         print("Falha ao criar janela do menu", file=sys.stderr)

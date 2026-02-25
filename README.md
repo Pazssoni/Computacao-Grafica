@@ -1,49 +1,44 @@
-# Computação Gráfica — Projeto Prático
+# Computação Gráfica — Projeto Prático (ANAMARANATOR 2000)
 
-Projeto prático (6 pts) da disciplina Computação Gráfica — IFF Campus Bom Jesus do Itabapoana. Aplicativo com menu gráfico e quatro módulos: Transformações Geométricas, Projeção, ViewPort e Iluminação.
+Projeto prático (6 pts) da disciplina Computação Gráfica — IFF Campus Bom Jesus do Itabapoana. Aplicativo **ANAMARANATOR 2000** com menu gráfico e quatro módulos: Transformações Geométricas, Projeção, ViewPort e Iluminação.
 
 ## Requisitos
 
-- Python 3
-- PyOpenGL, glfw, numpy
+- **Python 3** instalado (o único requisito manual; o resto o script instala).
 
-## Instalação e execução
+## Como executar (Linux e Windows)
 
-**Primeira vez (criar ambiente):**
+Abra o terminal (VS Code, Cmd, PowerShell ou terminal do sistema), entre na pasta do projeto e rode:
+
 ```bash
 cd Computacao-Grafica
-python3 -m venv venv
-source venv/bin/activate   # Linux/macOS
-pip install -r requirements.txt
+python run.py
 ```
 
-**Para rodar o programa** (escolha um):
+Se no seu sistema o comando for `python3`:
 
-1. **Script (recomendado)** — não precisa ativar o venv:
-   ```bash
-   ./run.sh
-   ```
-   (Se der "permission denied": `chmod +x run.sh` e tente de novo.)
+```bash
+python3 run.py
+```
 
-2. **Com o venv ativado** — no mesmo terminal onde fez `source venv/bin/activate`:
-   ```bash
-   python main.py
-   ```
-   No Linux às vezes o comando é `python3` e não `python`. Dentro do venv, `python` costuma funcionar.
+O **run.py** faz tudo sozinho em qualquer SO (Linux, Windows, macOS):
 
-3. **Sem ativar o venv** — usar o interpretador do venv direto:
-   ```bash
-   ./venv/bin/python main.py
-   ```
+1. Cria a pasta `venv` (ambiente virtual) se ainda não existir  
+2. Instala as dependências (`PyOpenGL`, `glfw`, `numpy`) dentro do venv  
+3. Executa o programa (`main.py`)
 
-**Por que dá erro?** Se você rodar `python main.py` (ou `python3 main.py`) **fora** do venv, o sistema usa o Python global, que normalmente não tem `glfw` nem `PyOpenGL` instalados → aparece "No module named 'glfw'". Por isso use `run.sh` ou ative o venv antes.
+Não é preciso ativar o venv nem instalar nada manualmente. Na primeira execução pode demorar um pouco por causa do `pip install`; nas seguintes sobe direto.
+
+**No VS Code:** abra a pasta do projeto, abra o terminal integrado (Terminal → Novo Terminal) e execute `python run.py` ou `python3 run.py` nessa pasta.
 
 No menu, clique na opção desejada (1–4) ou em "5 - Sair". Em cada módulo, use o botão **Voltar ao menu** para retornar.
 
 ## Estrutura
 
 ```
-├── main.py              # Entrada: menu gráfico (GLFW)
+├── main.py              # Entrada: menu gráfico (ANAMARANATOR 2000)
+├── run.py               # Instala dependências e executa (Linux/Windows)
+├── run.sh               # Atalho de execução (Linux/macOS)
 ├── requirements.txt
 ├── README.md
 ├── documentacao.md       # Documentação detalhada do projeto
@@ -53,8 +48,8 @@ No menu, clique na opção desejada (1–4) ou em "5 - Sair". Em cada módulo, u
 │   ├── viewport.py          # Módulo 3 — Três viewports, três câmeras, projeção ortogonal
 │   └── iluminacao.py        # Módulo 4 — Cubo e pirâmide, Flat/Smooth (Gouraud)
 └── utils/
-    ├── shapes.py            # Cubo e pirâmide (normais por face e por vértice)
-    ├── hud.py               # Texto 2D (fonte em blocos)
+    ├── shapes.py            # Cubo e pirâmide; arestas pretas (draw_*_edges)
+    ├── hud.py               # Texto 2D (fonte em blocos 5x7)
     ├── panel.py             # Botão "Voltar ao menu" e hit test
     └── axes.py              # Eixos X/Y/Z para referência
 ```

@@ -1,9 +1,11 @@
 """Objetos 3D reutilizáveis (glBegin/glEnd). Normais por face ou por vértice."""
 import math
 from OpenGL.GL import (
-    GL_QUADS, GL_TRIANGLES,
-    glBegin, glEnd, glVertex3f, glNormal3f,
+    GL_QUADS, GL_TRIANGLES, GL_LINES, GL_LINE_WIDTH,
+    glBegin, glEnd, glVertex3f, glNormal3f, glColor3f, glLineWidth,
 )
+EDGE_LINE_WIDTH = 1.6
+EDGE_COLOR = (0.0, 0.0, 0.0)
 
 
 def draw_cube(size=0.5):
@@ -23,6 +25,41 @@ def draw_cube(size=0.5):
     glNormal3f(-1, 0, 0)
     glVertex3f(-s, -s, -s); glVertex3f(-s, -s, s); glVertex3f(-s, s, s); glVertex3f(-s, s, -s)
     glEnd()
+
+
+def draw_cube_edges(size=0.5):
+    """Desenha as 12 arestas do cubo em preto (chamar após draw_cube/draw_cube_smooth)."""
+    s = size
+    verts = [(-s,-s,s),(s,-s,s),(s,s,s),(-s,s,s), (-s,-s,-s),(-s,s,-s),(s,s,-s),(s,-s,-s)]
+    edges = [(0,1),(1,2),(2,3),(3,0), (4,5),(5,6),(6,7),(7,4), (0,4),(1,7),(2,6),(3,5)]
+    glLineWidth(EDGE_LINE_WIDTH)
+    glColor3f(*EDGE_COLOR)
+    glBegin(GL_LINES)
+    for i, j in edges:
+        glVertex3f(*verts[i])
+        glVertex3f(*verts[j])
+    glEnd()
+    glLineWidth(1.0)
+
+
+def draw_pyramid_edges(size=0.5, height=0.7):
+    """Desenha as 8 arestas da pirâmide em preto."""
+    s = size
+    h2 = height / 2
+    apex = (0, h2, 0)
+    base = [(-s,-h2,-s),(s,-h2,-s),(s,-h2,s),(-s,-h2,s)]
+    glLineWidth(EDGE_LINE_WIDTH)
+    glColor3f(*EDGE_COLOR)
+    glBegin(GL_LINES)
+    for i in range(4):
+        j = (i + 1) % 4
+        glVertex3f(*base[i])
+        glVertex3f(*base[j])
+    for i in range(4):
+        glVertex3f(*apex)
+        glVertex3f(*base[i])
+    glEnd()
+    glLineWidth(1.0)
 
 
 def _norm(v):

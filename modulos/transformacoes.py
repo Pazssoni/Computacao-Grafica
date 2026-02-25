@@ -3,14 +3,14 @@ import ctypes
 import numpy as np
 import glfw
 from OpenGL.GL import (
-    GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
+    GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, GL_LIGHTING,
     GL_PROJECTION, GL_MODELVIEW, GL_LINES,
     glClear, glClearColor, glLoadIdentity, glMatrixMode,
     glViewport, glOrtho, glTranslatef, glScalef, glRotatef, glMultMatrixf,
     glPushMatrix, glPopMatrix, glColor3f, glEnable, glDisable,
     glBegin, glEnd, glVertex2f,
 )
-from utils.shapes import draw_cube
+from utils.shapes import draw_cube, draw_cube_edges
 from utils.hud import draw_text_2d
 from utils.panel import draw_back_button, hit_test
 
@@ -102,6 +102,7 @@ def run():
         w, h = glfw.get_framebuffer_size(win)
         glViewport(0, 0, w, h)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glDisable(GL_LIGHTING)
 
         col_width = w / 5
         for col in range(5):
@@ -142,6 +143,7 @@ def run():
                 glMultMatrixf(matrix_to_gl(shear_matrix(PARAMS["shx"], PARAMS["shy"], 0)))
                 glColor3f(0.9, 0.55, 0.9)
             draw_cube(0.35)
+            draw_cube_edges(0.35)
             glPopMatrix()
 
         glViewport(0, 0, w, h)

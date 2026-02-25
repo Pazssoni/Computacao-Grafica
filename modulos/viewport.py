@@ -8,13 +8,13 @@ from OpenGL.GL import (
     GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
     glClear, glClearColor, glLoadIdentity, glMatrixMode,
     glViewport, glOrtho,
-    glEnable, glPushMatrix, glPopMatrix,
+    glEnable, glDisable, glPushMatrix, glPopMatrix,
     glLightfv, glMaterialfv, glShadeModel,
     glRotatef,
 )
 from OpenGL.GLU import gluLookAt
 from OpenGL import GL
-from utils.shapes import draw_cube_smooth, draw_pyramid
+from utils.shapes import draw_cube_smooth, draw_pyramid, draw_cube_edges, draw_pyramid_edges
 from utils.axes import draw_axes
 from utils.hud import draw_text_2d, draw_viewport_border
 from utils.panel import draw_back_button, hit_test
@@ -120,6 +120,12 @@ def run():
             glRotatef(18, 0, 1, 0)
             glRotatef(8, 1, 0, 0)
             draw_obj()
+            glDisable(GL_LIGHTING)
+            if STATE["object_index"] == 0:
+                draw_cube_edges(0.5)
+            else:
+                draw_pyramid_edges(0.5, 0.8)
+            glEnable(GL_LIGHTING)
             glPopMatrix()
             if STATE["show_axes"]:
                 draw_axes(0.8, 2.0)

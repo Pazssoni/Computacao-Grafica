@@ -9,7 +9,7 @@
 
 ## 1. Resumo
 
-Sistema com **menu gráfico** (janela GLFW): o usuário escolhe o módulo com o mouse. Cada módulo abre em janela própria; ao fechar ou clicar em "Voltar ao menu", retorna ao menu. Desenvolvido em **Python 3** com **PyOpenGL** (modo imediato), **glfw** e **numpy** (módulo de transformações).
+Sistema **ANAMARANATOR 2000** com **menu gráfico** (janela GLFW): o usuário escolhe o módulo com o mouse. Cada módulo abre em janela própria; ao fechar ou clicar em "Voltar ao menu", retorna ao menu. Desenvolvido em **Python 3** com **PyOpenGL** (modo imediato), **glfw** e **numpy** (módulo de transformações). Sólidos com arestas pretas; execução via `python run.py` (cria venv e instala dependências).
 
 ---
 
@@ -17,7 +17,8 @@ Sistema com **menu gráfico** (janela GLFW): o usuário escolhe o módulo com o 
 
 ```
 Computacao-Grafica/
-├── main.py              # Menu gráfico; dispara run() de cada módulo
+├── main.py              # Menu gráfico (ANAMARANATOR 2000); dispara run() de cada módulo
+├── run.py               # Instala dependências e executa (cross-platform)
 ├── requirements.txt
 ├── documentacao.md
 ├── modulos/
@@ -34,9 +35,9 @@ Computacao-Grafica/
 
 - **main.py:** Loop do menu: desenha botões, trata clique, importa o módulo e chama `run()`. Ao retornar, restaura contexto e exibe o menu de novo. Opção 5 encerra.
 - **modulos/*.py:** Cada um exporta `run()`: cria janela GLFW, configura OpenGL e loop de renderização; não chama `glfw.terminate()` ao sair.
-- **utils/shapes.py:** `draw_cube`, `draw_cube_smooth`, `draw_pyramid`, `draw_pyramid_smooth` (glBegin/glEnd; normais por face ou por vértice).
+- **utils/shapes.py:** `draw_cube`, `draw_cube_smooth`, `draw_pyramid`, `draw_pyramid_smooth`; `draw_cube_edges`, `draw_pyramid_edges` (arestas pretas).
 - **utils/hud.py:** Texto em tela com fonte 5x7 em blocos (quads), sem dependência de GLUT.
-- **utils/panel.py:** Desenho do botão e retângulos para clique; `hit_test` converte coordenadas do mouse (y de cima para baixo) para coordenadas OpenGL.
+- **utils/panel.py:** Botão "Voltar ao menu" (desliga GL_LIGHTING ao desenhar para aparecer em todos os módulos); `hit_test` converte coordenadas do mouse.
 
 ---
 

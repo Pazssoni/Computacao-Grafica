@@ -9,7 +9,7 @@ from OpenGL.GL import (
     GL_PROJECTION, GL_MODELVIEW,
     GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
     glClear, glClearColor, glLoadIdentity, glMatrixMode,
-    glViewport, glOrtho, glEnable, glShadeModel,
+    glViewport, glOrtho, glEnable, glDisable, glShadeModel,
     glLightfv, glMaterialfv,
     glBegin, glEnd, glVertex3f, glNormal3f,
     glTranslatef, glRotatef, glPushMatrix, glPopMatrix,
@@ -18,6 +18,7 @@ from OpenGL.GLU import gluLookAt, gluPerspective
 from OpenGL import GL
 from utils.hud import draw_text_2d
 from utils.panel import draw_back_button, hit_test
+from utils.shapes import draw_cube_edges, draw_pyramid_edges
 
 
 def _draw_cube():
@@ -145,6 +146,9 @@ def run():
         glMaterialfv(GL_FRONT_AND_BACK, GL.GL_SPECULAR, (0.5, 0.5, 0.5, 1.0))
         glMaterialfv(GL_FRONT_AND_BACK, GL.GL_SHININESS, (70.0,))
         _draw_cube()
+        glDisable(GL_LIGHTING)
+        draw_cube_edges(1.0)
+        glEnable(GL_LIGHTING)
         glPopMatrix()
 
         glPushMatrix()
@@ -154,6 +158,9 @@ def run():
         glMaterialfv(GL_FRONT_AND_BACK, GL.GL_SPECULAR, (0.6, 0.6, 0.6, 1.0))
         glMaterialfv(GL_FRONT_AND_BACK, GL.GL_SHININESS, (80.0,))
         _draw_pyramid()
+        glDisable(GL_LIGHTING)
+        draw_pyramid_edges(1.0, 2.0)
+        glEnable(GL_LIGHTING)
         glPopMatrix()
 
         glMatrixMode(GL_PROJECTION)

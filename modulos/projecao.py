@@ -3,16 +3,17 @@ import glfw
 from OpenGL.GL import (
     GL_COLOR_BUFFER_BIT, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST,
     GL_PROJECTION, GL_MODELVIEW,
-    GL_LIGHTING, GL_LIGHT0, GL_NORMALIZE,
+    GL_LIGHTING, GL_LIGHT0, GL_NORMALIZE, GL_LINES,
+    glDisable, glEnable,
     GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION,
     GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
     glClear, glClearColor, glLoadIdentity, glMatrixMode,
-    glViewport, glOrtho, glEnable,
+    glViewport, glOrtho,
     glLightfv, glMaterialfv, glTranslatef, glPushMatrix, glPopMatrix,
 )
 from OpenGL.GLU import gluLookAt, gluPerspective
 from OpenGL import GL
-from utils.shapes import draw_cube, draw_pyramid
+from utils.shapes import draw_cube, draw_pyramid, draw_cube_edges, draw_pyramid_edges
 from utils.hud import draw_text_2d
 from utils.panel import draw_back_button, hit_test
 from math import sqrt
@@ -168,6 +169,9 @@ def run():
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, (0.45, 0.45, 0.45, 1.0))
         glMaterialfv(GL_FRONT_AND_BACK, GL.GL_SHININESS, (55.0,))
         draw_cube(0.5)
+        glDisable(GL_LIGHTING)
+        draw_cube_edges(0.5)
+        glEnable(GL_LIGHTING)
 
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, (0.85, 0.5, 0.25, 1.0))
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, (0.4, 0.4, 0.4, 1.0))
@@ -175,6 +179,9 @@ def run():
         glPushMatrix()
         glTranslatef(1.8, 0.0, -0.8)
         draw_pyramid(0.4, 0.7)
+        glDisable(GL_LIGHTING)
+        draw_pyramid_edges(0.4, 0.7)
+        glEnable(GL_LIGHTING)
         glPopMatrix()
 
         glMatrixMode(GL_PROJECTION)
