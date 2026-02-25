@@ -9,13 +9,34 @@ Projeto prático (6 pts) da disciplina Computação Gráfica — IFF Campus Bom 
 
 ## Instalação e execução
 
+**Primeira vez (criar ambiente):**
 ```bash
 cd Computacao-Grafica
 python3 -m venv venv
 source venv/bin/activate   # Linux/macOS
 pip install -r requirements.txt
-python main.py
 ```
+
+**Para rodar o programa** (escolha um):
+
+1. **Script (recomendado)** — não precisa ativar o venv:
+   ```bash
+   ./run.sh
+   ```
+   (Se der "permission denied": `chmod +x run.sh` e tente de novo.)
+
+2. **Com o venv ativado** — no mesmo terminal onde fez `source venv/bin/activate`:
+   ```bash
+   python main.py
+   ```
+   No Linux às vezes o comando é `python3` e não `python`. Dentro do venv, `python` costuma funcionar.
+
+3. **Sem ativar o venv** — usar o interpretador do venv direto:
+   ```bash
+   ./venv/bin/python main.py
+   ```
+
+**Por que dá erro?** Se você rodar `python main.py` (ou `python3 main.py`) **fora** do venv, o sistema usa o Python global, que normalmente não tem `glfw` nem `PyOpenGL` instalados → aparece "No module named 'glfw'". Por isso use `run.sh` ou ative o venv antes.
 
 No menu, clique na opção desejada (1–4) ou em "5 - Sair". Em cada módulo, use o botão **Voltar ao menu** para retornar.
 
