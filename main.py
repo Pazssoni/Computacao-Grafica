@@ -15,10 +15,10 @@ from utils.hud import draw_text_2d, text_width
 from utils.panel import hit_test
 
 MENU_BUTTONS = [
-    ("1", "1 - Transformacoes Geometricas"),
-    ("2", "2 - Projecao"),
+    ("1", "1 - Transformações Geométricas"),
+    ("2", "2 - Projeção"),
     ("3", "3 - ViewPort"),
-    ("4", "4 - Iluminacao"),
+    ("4", "4 - Iluminação"),
     ("5", "5 - Sair"),
 ]
 BTN_WIDTH = 460
@@ -51,7 +51,7 @@ def _menu_rects(w, h):
     return rects
 
 
-def _draw_menu(menu_win):
+def _draw_menu(menu_win, hover_bid=None):
     w, h = glfw.get_framebuffer_size(menu_win)
     glViewport(0, 0, w, h)
     glClear(GL_COLOR_BUFFER_BIT)
@@ -67,9 +67,14 @@ def _draw_menu(menu_win):
     for bid, label in MENU_BUTTONS:
         if y < BOTTOM_PAD + BTN_HEIGHT:
             break
-        glColor3f(0.2, 0.22, 0.28)
+        if bid == hover_bid:
+            glColor3f(0.30, 0.42, 0.62)
+            border_color = (0.72, 0.82, 0.98)
+        else:
+            glColor3f(0.2, 0.22, 0.28)
+            border_color = (0.4, 0.43, 0.5)
         _draw_quad(cx, y - BTN_HEIGHT, cx + BTN_WIDTH, y)
-        glColor3f(0.4, 0.43, 0.5)
+        glColor3f(*border_color)
         glBegin(GL_LINES)
         glVertex2f(cx, y)
         glVertex2f(cx + BTN_WIDTH, y)
@@ -80,7 +85,10 @@ def _draw_menu(menu_win):
         glVertex2f(cx, y - BTN_HEIGHT)
         glVertex2f(cx, y)
         glEnd()
-        draw_text_2d(cx + 24, y - (BTN_HEIGHT / 2) - 6, label, 0.94, 0.96, 1.0)
+        tw = text_width(label, 2)
+        tx = cx + (BTN_WIDTH - tw) / 2
+        ty = (y - BTN_HEIGHT) + (BTN_HEIGHT / 2) + 5
+        draw_text_2d(tx, ty, label, 0.94, 0.96, 1.0)
         rects.append((bid, cx, y - BTN_HEIGHT, cx + BTN_WIDTH, y))
         y -= BTN_HEIGHT + BTN_MARGIN
     title = "ANAMARANATOR 2000 - Escolha o modulo"
@@ -118,7 +126,10 @@ def main():
     glfw.set_mouse_button_callback(menu_win, on_mouse)
 
     while not glfw.window_should_close(menu_win):
-        rects = _draw_menu(menu_win)
+        mx, my = glfw.get_cursor_pos(menu_win)
+        fw, fh = glfw.get_framebuffer_size(menu_win)
+        hover_bid = hit_test(mx, my, fw, fh, _menu_rects(fw, fh))
+        rects = _draw_menu(menu_win, hover_bid=hover_bid)
         glfw.swap_buffers(menu_win)
         glfw.poll_events()
 
