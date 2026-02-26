@@ -4,9 +4,9 @@ from OpenGL.GL import (
     GL_QUADS, GL_LINES,
     glMatrixMode, glLoadIdentity, glOrtho,
     glPushMatrix, glPopMatrix, glDisable, glEnable,
-    glBegin, glEnd, glVertex2f, glColor3f,
+    glBegin, glEnd, glVertex2f, glColor3f, glIsEnabled,
 )
-from utils.hud import draw_text_2d
+from utils.hud import draw_text_2d, text_width
 
 BACK_BUTTON_W = 200
 BACK_BUTTON_H = 44
@@ -28,6 +28,8 @@ def draw_back_button(w, h):
     y1 = BACK_MARGIN
     x2 = x1 + BACK_BUTTON_W
     y2 = y1 + BACK_BUTTON_H
+    lighting_was_enabled = glIsEnabled(GL_LIGHTING)
+    depth_was_enabled = glIsEnabled(GL_DEPTH_TEST)
     glDisable(GL_DEPTH_TEST)
     glDisable(GL_LIGHTING)
     glMatrixMode(GL_PROJECTION)
@@ -50,13 +52,23 @@ def draw_back_button(w, h):
     glVertex2f(x1, y1)
     glVertex2f(x1, y2)
     glEnd()
-    draw_text_2d(x1 + 18, y1 + 14, "Voltar ao menu", 0.95, 0.96, 1.0)
+    label = "Voltar ao menu"
+    tw = text_width(label, 2)
+    tx = x1 + (BACK_BUTTON_W - tw) / 2
+    ty = y1 + (BACK_BUTTON_H / 2) + 5
+    draw_text_2d(tx, ty, label, 0.95, 0.96, 1.0)
     glPopMatrix()
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
-    glEnable(GL_LIGHTING)
-    glEnable(GL_DEPTH_TEST)
+    if lighting_was_enabled:
+        glEnable(GL_LIGHTING)
+    else:
+        glDisable(GL_LIGHTING)
+    if depth_was_enabled:
+        glEnable(GL_DEPTH_TEST)
+    else:
+        glDisable(GL_DEPTH_TEST)
     return [("back", x1, y1, x2, y2)]
 
 

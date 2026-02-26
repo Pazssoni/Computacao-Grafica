@@ -1,4 +1,5 @@
-"""Texto 2D em tela (fonte 5x7 em blocos, sem GLUT)."""
+"""2D text and HUD helpers (5x7 bitmap font, no GLUT)."""
+import unicodedata
 from OpenGL.GL import (
     GL_PROJECTION, GL_MODELVIEW, GL_DEPTH_TEST,
     GL_QUADS, GL_LINES,
@@ -7,10 +8,22 @@ from OpenGL.GL import (
     glColor3f, glBegin, glEnd, glVertex2f,
 )
 
-# Fonte 5x7: 7 linhas × 5 bits por caractere (1 = pixel aceso).
+# 5x7 font: 7 rows x 5 bits per row
 _FONT_5X7 = {
     " ": (0, 0, 0, 0, 0, 0, 0),
     "-": (0, 0, 0, 14, 0, 0, 0),
+    ".": (0, 0, 0, 0, 0, 12, 12),
+    ",": (0, 0, 0, 0, 0, 12, 8),
+    ":": (0, 12, 12, 0, 12, 12, 0),
+    ";": (0, 12, 12, 0, 12, 8, 0),
+    "/": (1, 2, 4, 8, 16, 0, 0),
+    "(": (2, 4, 8, 8, 8, 4, 2),
+    ")": (8, 4, 2, 2, 2, 4, 8),
+    "|": (4, 4, 4, 4, 4, 4, 4),
+    "+": (0, 4, 4, 31, 4, 4, 0),
+    "=": (0, 0, 31, 0, 31, 0, 0),
+    "'": (4, 4, 2, 0, 0, 0, 0),
+    '"': (10, 10, 0, 0, 0, 0, 0),
     "0": (14, 17, 19, 21, 25, 17, 14),
     "1": (4, 12, 4, 4, 4, 4, 14),
     "2": (14, 17, 1, 2, 4, 8, 31),
@@ -48,27 +61,32 @@ _FONT_5X7 = {
     "Y": (17, 17, 10, 4, 4, 4, 4),
     "Z": (31, 1, 2, 4, 8, 16, 31),
     "?": (14, 17, 1, 2, 4, 0, 4),
-    "a": (0, 0, 14, 1, 15, 17, 15),
-    "c": (0, 0, 14, 16, 16, 17, 14),
-    "e": (0, 0, 14, 17, 31, 16, 14),
-    "i": (0, 4, 0, 4, 4, 4, 14),
-    "l": (0, 12, 4, 4, 4, 4, 14),
-    "m": (0, 0, 10, 21, 21, 17, 17),
-    "n": (0, 0, 22, 25, 17, 17, 17),
-    "o": (0, 0, 14, 17, 17, 17, 14),
-    "r": (0, 0, 22, 24, 16, 16, 16),
-    "t": (0, 4, 14, 4, 4, 4, 2),
-    "u": (0, 0, 17, 17, 17, 19, 13),
-    "v": (0, 0, 17, 17, 10, 10, 4),
 }
 
 
+def _normalize_char(c):
+    if not isinstance(c, str) or len(c) != 1:
+        return "?"
+    basic = unicodedata.normalize("NFD", c)
+    basic = "".join(ch for ch in basic if unicodedata.category(ch) != "Mn")
+    ch = basic[0] if basic else c
+    if "a" <= ch <= "z":
+        ch = ch.upper()
+    aliases = {
+        "–": "-",
+        "—": "-",
+        "_": "-",
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'",
+    }
+    ch = aliases.get(ch, ch)
+    return ch if ch in _FONT_5X7 else "?"
+
+
 def _get_glyph(c):
-    """Tupla de 7 linhas (5 bits) para o caractere."""
-    if c in _FONT_5X7:
-        return _FONT_5X7[c]
-    u = c.upper() if isinstance(c, str) and len(c) == 1 else c
-    return _FONT_5X7.get(u, _FONT_5X7.get("?", _FONT_5X7[" "]))
+    return _FONT_5X7.get(c, _FONT_5X7["?"])
 
 
 def _draw_char_blocks(x, y, glyph, scale, r, g, b):
@@ -91,12 +109,10 @@ def _draw_char_blocks(x, y, glyph, scale, r, g, b):
 def draw_text_blocks(x, y, text, scale=2, r=1, g=1, b=1):
     if not text:
         return
-    _acc = {"ã": "a", "á": "a", "â": "a", "à": "a", "ç": "c", "é": "e", "ê": "e", "í": "i", "ó": "o", "ô": "o", "õ": "o", "ú": "u"}
     cx = x
     char_w = 6 * scale
     for c in text:
-        draw_c = _acc.get(c, c)
-        glyph = _get_glyph(draw_c)
+        glyph = _get_glyph(_normalize_char(c))
         _draw_char_blocks(cx, y, glyph, scale, r, g, b)
         cx += char_w
 
@@ -108,7 +124,6 @@ def draw_text_2d(x, y, text, r=1, g=1, b=1):
 
 
 def text_width(text, scale=2):
-    """Largura aproximada em pixels (para centralizar texto)."""
     return len(text) * 6 * scale
 
 
